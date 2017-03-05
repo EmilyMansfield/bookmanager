@@ -47,8 +47,8 @@ class Book
   def to_bibtex
     s = []
     s << "@book{#{@uuid}"
-    s << "      author = #{@author}"
-    s << "      title = #{@title}"
+    s << "      author = \"#{@author}\""
+    s << "      title = \"#{@title}\""
     s << "      year = #{@date.year}"
     s.join(",\n") + "\n}"
   end
