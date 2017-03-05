@@ -12,11 +12,22 @@ file, which can then be easily searched and parsed.
 Possible query output includes the path to the file on disk, a BibTeX
 entry for referencing, and of course the entire database entry.
 
-For now, the library is saved in a file `library.yml` in the working
-directory, though this is a priority to fix.
+By default the library database is saved in `$HOME/.bookmanager`,
+although `XDG_DATA_HOME` will be honoured if it is set. A single user
+may have multiple libraries under this directory, which can be selected
+via the `-l` option.
 
 Usage
 ---
+
+~~~
+> $ book_manager.rb --help
+Usage: book_manager.rb [OPTION]... [COMMAND] [ARGS]...
+Manage a library of digital books and papers.
+
+    -h, --help     display this help and exit
+    -l, --library  name of the library
+~~~
 
 When invoking, options are specified first, then a command, followed by
 a list of key-value pairs for that command. Omitted key-value pairs have
@@ -25,17 +36,17 @@ sane defaults, and are unordered.
 For example, to add a few papers
 
 ~~~
-> book_manager.rb add title 'Groundbreaking paper' author 'A.N Author' \
+> $ book_manager.rb add title 'Groundbreaking paper' author 'A.N Author' \
 	date '1990' path '~/Papers/gr-paper.pdf'
 
-> book_manager.rb add author 'Author B. Two' title 'Lotsa Research'
+> $ book_manager.rb add author 'Author B. Two' title 'Lotsa Research'
 	uuid 'ab2:lotsa-research'
 ~~~
 
 To get the full database entry
 
 ~~~
-> book_manager.rb find title 'Groundbr'
+> $ book_manager.rb find title 'Groundbr'
 ---
 - uuid: 542c3e4b-6057-4c36-9fe7-1f1bb86aa130
   title: Groundbreaking Paper
@@ -50,7 +61,7 @@ To get the full database entry
 To generate the BibTeX entry
 
 ~~~
-> book_manager.rb bibtex uuid ab2
+> $ book_manager.rb bibtex uuid ab2
 @book{ab2:lotsa-research,
       author = "Author B. Two",
 	  title = "Lotsa Research",
@@ -62,7 +73,7 @@ To open the file (`~` is expanded to the user's home directory) in
 `evince`, say
 
 ~~~
-> evince `book_manager.rb path author 'Two'`
+> $ evince `book_manager.rb path author 'Two'`
 ~~~
 
 Querying
@@ -75,7 +86,7 @@ substring, although when specifying a UUID the start must match.
 For example
 
 ~~~
-> book_manager.rb find author 'James' title 'group' uuid 'ab'
+> $ book_manager.rb find author 'James' title 'group' uuid 'ab'
 ~~~
 
 will return all documents with an author containing the string
@@ -87,4 +98,3 @@ TODO
 
  - Regexp support for queries
  - Different document types with different tags
- - Configurable YAML library location
