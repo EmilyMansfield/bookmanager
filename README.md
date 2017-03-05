@@ -96,5 +96,4 @@ with `ab`.
 TODO
 ---
 
- - Regexp support for queries
- - Different document types with different tags
+See the Github issue list.
