@@ -1,0 +1,9 @@
+[Destkop Entry]
+Name=Book Manager
+Comment=Manage a library of digital books and papers
+Exec=book_manager
+Terminal=false
+Type=Application
+StartupNotify=true
+OnlyShowIn=GNOME;
+Categories=GNOME;Utility;
