@@ -1,11 +1,15 @@
 $prefix       = ENV['prefix']       || '/usr/local'
 $exec_prefix  = ENV['exec_prefix']  || $prefix
 $bindir       = ENV['bindir']       || "#{$exec_prefix}/bin"
+$datarootdir  = ENV['datarootdir']  || "#{$prefix}/share"
+$datadir      = ENV['datadir']      || $datarootdir
 
 $subs = {
   'prefix': $prefix,
   'exec_prefix': $exec_prefix,
-  'bindir': $bindir
+  'bindir': $bindir,
+  'datarootdir': $datarootdir,
+  'datadir': $datadir
 }
 
 # Perform Autoconf-style substitution replacing @foo@ with $subs['foo']
@@ -21,17 +25,27 @@ def substitute_file(in_file, out_file)
   File.open(out_file, 'w').write(f)
 end
 
-task :process_desktop do
-  f = 'com.dbmansfield.book.desktop'
-  substitute_file("#{f}.in", f)
+$provider_dir = "#{$datadir}/gnome-shell/search-providers"
+$applications_dir = "#{$datadir}/applications"
+
+directory $provider_dir
+directory $applications_dir
+
+$service = 'com.dbmansfield.book.search-provider.service'
+$desktop = 'com.dbmansfield.book.desktop'
+
+file $desktop do |t|
+  substitute_file("#{t.name}.in", t.name)
 end
 
-task :process_service do
-  f = 'com.dbmansfield.book.search-provider.service'
-  substitute_file("#{f}.in", f)
+file $service do |t|
+  substitute_file("#{t.name}.in", t.name)
 end
 
-task process: [:process_desktop, :process_service] do
+task process: [$desktop, $service] do
 end
 
-task default: [:process]
+task install: [:process, $provider_path] do
+  cp $service, "#{$provider_dir}/#{$service}"
+  cp $desktop, "#{$applications_dir}/#{$desktop}"
+end
