@@ -1,9 +1,10 @@
-[Destkop Entry]
+[Desktop Entry]
 Name=Book Manager
 Comment=Manage a library of digital books and papers
-Exec=book_manager
+Exec=bookmanager
+Icon=x-office-document
 Terminal=false
 Type=Application
+Encoding=UTF-8
 StartupNotify=true
-OnlyShowIn=GNOME;
 Categories=GNOME;Utility;

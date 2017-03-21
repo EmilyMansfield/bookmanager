@@ -1,3 +1,0 @@
-[D-Bus Service]
-Name=com.dbmansfield.book.SearchProvider
-Exec=@bindir@/book_manager --gapplication-service

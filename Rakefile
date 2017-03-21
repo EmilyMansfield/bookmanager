@@ -1,3 +1,5 @@
+require 'rake/clean'
+
 $prefix       = ENV['prefix']       || '/usr/local'
 $exec_prefix  = ENV['exec_prefix']  || $prefix
 $bindir       = ENV['bindir']       || "#{$exec_prefix}/bin"
@@ -26,26 +28,32 @@ def substitute_file(in_file, out_file)
 end
 
 $provider_dir = "#{$datadir}/gnome-shell/search-providers"
+$services_dir = "#{$datadir}/dbus-1/services"
 $applications_dir = "#{$datadir}/applications"
 
 directory $provider_dir
+directory $services_dir
 directory $applications_dir
 
-$service = 'com.dbmansfield.book.search-provider.service'
+$provider = 'com.dbmansfield.book.SearchProvider.ini'
+$service = 'com.dbmansfield.book.SearchProvider.service'
 $desktop = 'com.dbmansfield.book.desktop'
 
 file $desktop do |t|
   substitute_file("#{t.name}.in", t.name)
 end
+CLOBBER << $desktop
 
 file $service do |t|
   substitute_file("#{t.name}.in", t.name)
 end
+CLOBBER << $service
 
 task process: [$desktop, $service] do
 end
 
-task install: [:process, $provider_path] do
-  cp $service, "#{$provider_dir}/#{$service}"
+task install: [:process, $provider_dir, $applications_dir] do
+  cp $provider, "#{$provider_dir}/#{$provider}"
+  cp $service, "#{$services_dir}/#{$service}"
   cp $desktop, "#{$applications_dir}/#{$desktop}"
 end

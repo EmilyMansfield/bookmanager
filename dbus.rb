@@ -41,7 +41,7 @@ class SearchProvider < DBus::Object
 end
 
 bus = DBus.session_bus
-service = bus.request_service('com.dbmansfield.book.search-provider.service')
+service = bus.request_service('com.dbmansfield.book.SearchProvider.service')
 exported_obj = SearchProvider.new('/com/dbmansfield/book/SearchProvider')
 service.export(exported_obj)
 
