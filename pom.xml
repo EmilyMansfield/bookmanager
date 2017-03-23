@@ -10,8 +10,15 @@
 
     <properties>
         <kotlin.version>1.1.1</kotlin.version>
-        <main.class>com.dbmansfield.book.ApplicationSearchProviderKt</main.class>
+        <main.class>com.dbmansfield.book.ApplicationKt</main.class>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>xenomachina</id>
+            <url>https://dl.bintray.com/xenomachina/maven/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.github.hypfvieh/dbus-java -->
@@ -19,6 +26,12 @@
             <groupId>com.github.hypfvieh</groupId>
             <artifactId>dbus-java</artifactId>
             <version>2.7.2</version>
+        </dependency>
+        <!-- https://github.com/xenomachina/kotlin-argparser -->
+        <dependency>
+            <groupId>com.xenomachina</groupId>
+            <artifactId>kotlin-argparser</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
