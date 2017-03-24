@@ -12,10 +12,11 @@ data class Book(val title: String = "",
                 val uuid: UUID = UUID.randomUUID()) {
 
     fun asBibtex(): String {
+        val formattedAuthors: String = authors.joinToString(separator = " and ")
         return """
-        |@book{$uuid
-        |    author = "$authors"
-        |    title = "$title"
+        |@book{$uuid,
+        |    author = "$formattedAuthors",
+        |    title = "$title",
         |    year = "${date.get(Calendar.YEAR)}"
         |}
         """.trimMargin()
