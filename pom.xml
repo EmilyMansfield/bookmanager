@@ -10,7 +10,7 @@
 
     <properties>
         <kotlin.version>1.1.1</kotlin.version>
-        <main.class>com.dbmansfield.book.ApplicationKt</main.class>
+        <main.class>com.dbmansfield.book.app.FrontendCLIKt</main.class>
     </properties>
 
     <repositories>

@@ -1,5 +1,7 @@
 package com.dbmansfield.book.app
 
+import com.dbmansfield.book.Book
+
 object CommandParser {
     // Pairwise chunk a list then convert each pair to a k,v entry of a map
     // [1,2,3,4,5,6] -> [[1,2],[3,4],[5,6]] -> {1 => 2, 3 => 4, 5 => 6}
@@ -21,6 +23,7 @@ object CommandParser {
             "path" -> {
             }
             "bibtex" -> {
+                println(Book(title = "Test title", authors = listOf("Author 1", "Author 2")).asBibtex())
             }
             else -> {
                 println("$command is not a recognized command")
