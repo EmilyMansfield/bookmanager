@@ -1,12 +1,13 @@
 package com.dbmansfield.book
 
 import java.io.File
+import java.time.LocalDate
 import java.util.*
 
 data class Book(val title: String = "",
                 val subtitle: String = "",
                 val authors: List<String> = emptyList(),
-                val date: Calendar = Calendar.getInstance(),
+                val date: LocalDate = LocalDate.now(),
                 val abstract: String = "",
                 val path: File? = null,
                 val uuid: UUID = UUID.randomUUID()) {
@@ -17,7 +18,7 @@ data class Book(val title: String = "",
         |@book{$uuid,
         |    author = "$formattedAuthors",
         |    title = "$title",
-        |    year = "${date.get(Calendar.YEAR)}"
+        |    year = "${date.year}"
         |}
         """.trimMargin()
     }
