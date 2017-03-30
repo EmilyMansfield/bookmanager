@@ -3,7 +3,6 @@ package com.dbmansfield.book.app
 import com.dbmansfield.book.Args
 import com.dbmansfield.book.Library
 import com.xenomachina.argparser.ArgParser
-import com.xenomachina.argparser.MissingRequiredPositionalArgumentException
 import com.xenomachina.argparser.ShowHelpException
 import java.io.File
 
@@ -28,10 +27,6 @@ fun main(vararg args: String) {
     } catch (e: ShowHelpException) {
         println(help)
         return
-    } catch (e: MissingRequiredPositionalArgumentException) {
-        println("No command given")
-        println(help)
-        return
     }
 
     // --library
@@ -42,9 +37,9 @@ fun main(vararg args: String) {
     }
 
     // Load library
-    try {
+    val library = try {
         File(libraryDir).mkdir()
-        val library = Library.findLibrary("$libraryDir/$libraryFilename")
+        Library.findLibrary("$libraryDir/$libraryFilename")
     } catch (e: Exception) {
         println(e)
         return
@@ -52,11 +47,19 @@ fun main(vararg args: String) {
 
     // Run as a DBus Service
     if (parsedArgs.service) {
-        runService()
+        runService(library)
+        return
+    }
+
+    // Command positional argument is not compulsory because it doesn't need
+    // to be given when invoking as a DBus service. It is compulsory when
+    // invoked normally, however
+    if (parsedArgs.terms.isEmpty()) {
+        println("No command given")
+        println(help)
         return
     }
 
     // Parse and execute command
-    val commandParser = CommandParser
-    commandParser.run(parsedArgs.terms)
+    CommandParser(library).parse(parsedArgs.terms)
 }

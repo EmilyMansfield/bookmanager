@@ -3,7 +3,7 @@ package com.dbmansfield.book
 import org.freedesktop.dbus.Variant
 import org.gnome.Shell.SearchProvider2
 
-class SearchProvider : SearchProvider2 {
+class SearchProvider(val library: Library) : SearchProvider2 {
 
     override fun GetInitialResultSet(terms: Array<String>): Array<String> {
         return arrayOf("foo", "bar")
