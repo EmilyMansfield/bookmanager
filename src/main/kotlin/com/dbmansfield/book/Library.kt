@@ -45,4 +45,27 @@ class Library(file: File) {
             return Library(f)
         }
     }
+
+    fun add(book: Book) {
+        books.plus(book)
+    }
+
+    fun find(title: String? = null, authors: List<String> = emptyList()): List<Book> {
+        // Various match functions to compare against
+        // TODO: Move these into a proper Filter class, or something like that
+        // Every book should match an empty or null query
+
+        // Match if any of the book's authors contain any of the query authors as a substring
+        fun matchesAuthors(book: Book): Boolean {
+            return authors.isEmpty() || authors.any { a -> book.authors.any { b -> b.contains(a, ignoreCase = true) } }
+        }
+
+        // Match if the book's title contains the query title as a substring
+        fun matchesTitle(book: Book): Boolean {
+            return book.title.contains(title ?: "", ignoreCase = true)
+        }
+
+        return books.filter(::matchesAuthors).filter(::matchesTitle)
+    }
+
 }
