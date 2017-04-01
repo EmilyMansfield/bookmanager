@@ -32,7 +32,7 @@ class CommandParser(val library: Library) {
                 val book = Book(
                         title = args["title"] ?: "",
                         subtitle = args["subtitle"] ?: "",
-                        authors = splitAndTrim(args["authors"], ','),
+                        authors = splitAndTrim(args["authors"] ?: args["author"], ','),
                         date = if (args["date"] == null) LocalDate.now() else LocalDate.parse(args["date"]),
                         abstract = args["abstract"] ?: "",
                         path = if (args["path"] == null) null else File(args["path"]),
