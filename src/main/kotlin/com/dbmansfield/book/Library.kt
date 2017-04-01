@@ -50,10 +50,15 @@ class Library(file: File) {
         books.plus(book)
     }
 
-    fun find(title: String? = null, authors: List<String> = emptyList()): List<Book> {
+    fun find(title: String? = null, authors: List<String> = emptyList(), uuid: String? = null): List<Book> {
         // Various match functions to compare against
         // TODO: Move these into a proper Filter class, or something like that
         // Every book should match an empty or null query
+
+        // Match book starting with the query UUID
+        fun matchesUuid(book: Book): Boolean {
+            return book.uuid.toString().startsWith(uuid ?: "")
+        }
 
         // Match if any of the book's authors contain any of the query authors as a substring
         fun matchesAuthors(book: Book): Boolean {
@@ -65,7 +70,7 @@ class Library(file: File) {
             return book.title.contains(title ?: "", ignoreCase = true)
         }
 
-        return books.filter(::matchesAuthors).filter(::matchesTitle)
+        return books.filter(::matchesUuid).filter(::matchesAuthors).filter(::matchesTitle)
     }
 
 }
