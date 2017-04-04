@@ -51,6 +51,7 @@ class CommandParser(val library: Library) {
                 println("$command is not a recognized command")
             }
         }
+        library.save()
     }
 }
 

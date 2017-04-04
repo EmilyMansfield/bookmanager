@@ -1,21 +1,33 @@
 package com.dbmansfield.book
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
-class Library(file: File) {
-    val books: Array<Book>
+class Library(val file: File) {
+    val books: MutableList<Book>
+    // True if modifications to existing data were made, in which case
+    // appending new data is not sufficient
+    private var needFullWrite: Boolean = false
+    // Indices of books added
+    private val toAppend: MutableList<Int> = mutableListOf()
+    // For loading/saving YAML
+    private val mapper: ObjectMapper
 
     init {
         if (file.canRead()) {
-            val mapper = ObjectMapper(YAMLFactory())
+            mapper = ObjectMapper(YAMLFactory())
                     .registerModule(KotlinModule())
                     .registerModule(JavaTimeModule())
-            books = mapper.readValue(file, Array<Book>::class.java) ?: emptyArray()
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            books = mapper.readValue<MutableList<Book>>(file)
         } else {
             throw FileNotFoundException("Cannot read $file")
         }
@@ -47,7 +59,25 @@ class Library(file: File) {
     }
 
     fun add(book: Book) {
-        books.plus(book)
+        books.add(book)
+        toAppend.add(books.lastIndex)
+    }
+
+    fun save() {
+        if (needFullWrite) {
+            // Save entire array as a YAML file, overwriting the current one
+            val fos = FileOutputStream(file, false)
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValues(fos)
+                    .write(books)
+        } else if (toAppend.isNotEmpty()) {
+            // Append the changes to the existing YAML file
+            val fos = FileOutputStream(file, true)
+            mapper.writerWithDefaultPrettyPrinter()
+                    .with(YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
+                    .writeValues(fos)
+                    .write(books.slice(toAppend.asIterable()))
+        }
     }
 
     fun find(title: String? = null, authors: List<String> = emptyList(), uuid: String? = null): List<Book> {
