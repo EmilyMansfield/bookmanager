@@ -7,7 +7,7 @@ import org.gnome.Shell.SearchProvider2
 class SearchProvider(val library: Library) : SearchProvider2 {
 
     override fun GetInitialResultSet(terms: Array<String>): Array<String> {
-        return library.find(title = terms.reduce { a, b -> a + b }).map { it.uuid.toString() }.toTypedArray()
+        return library.find(title = terms.reduce { a, b -> a + " " + b }).map { it.uuid.toString() }.toTypedArray()
     }
 
     override fun GetSubsearchResultSet(previousResults: Array<String>, terms: Array<String>): Array<String> {

@@ -20,6 +20,6 @@ fun runService(library: Library) {
     bus.exportObject("/com/dbmansfield/book/SearchProvider", SearchProvider(library))
     // Want to wait on the thread the exported object is running on, but we
     // can't get access to it so we just sleep a bit instead.
-    sleep(10000)
+    sleep(Long.MAX_VALUE)
     bus.disconnect()
 }
