@@ -31,16 +31,30 @@ class Library
     end
 
     if opts[:title]
-      filtered = filtered.find_all do |b|
-        b.title.downcase.include?(opts[:title].downcase)
+      if is_regex_search(opts[:title])
+        filtered = filtered.find_all do |b|
+          b.title[to_regex(opts[:title])]
+        end
+      else
+        filtered = filtered.find_all do |b|
+          b.title.downcase.include?(opts[:title].downcase)
+        end
       end
     end
 
     if opts[:author]
-      filtered = filtered.find_all do |b|
+      if is_regex_search(opts[:author])
+        re = to_regex(opts[:author])
+        filtered = filtered.find_all do |b|
+          b.author[re] ||
+            b.coauthors.any? { |c| c[re] }
+        end
+      else
         name = opts[:author].downcase
-        b.author.downcase.include?(name) ||
-          b.coauthors.any? { |c| c.downcase.include?(name) }
+        filtered = filtered.find_all do |b|
+          b.author.downcase.include?(name) ||
+            b.coauthors.any? { |c| c.downcase.include?(name) }
+        end
       end
     end
 
@@ -56,4 +70,14 @@ class Library
       f.puts to_yaml
     end
   end
+
+  def is_regex_search(opt)
+    opt.length > 1 && opt[0] == '/' && opt[-1] == '/'
+  end
+
+  def to_regex(opt)
+    Regexp.new(opt[1..-2])
+  end
+
+  private :is_regex_search, :to_regex
 end
